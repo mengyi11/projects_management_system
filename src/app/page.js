@@ -24,6 +24,13 @@ export default function Login() {
 
       if (ok && statusCode === 200) {
         toast.success("Login successfully");
+        if (role_id === 1) {
+          router.push('/admin/dashboard');
+        } else if (role_id === 2) {
+          router.push('/faculty/dashboard');
+        } else if (role_id === 3) {
+          router.push('/student/dashboard');
+        }
       }
     } catch (error) {
       console.log(error);
