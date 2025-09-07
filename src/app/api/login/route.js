@@ -1,23 +1,31 @@
 import { db } from '../../../lib/db';
 
-export async function POST(req, res) {
+export async function POST(req) {
   try {
-    const { username, password } = await req.json();
+    const { email } = await req.json();
 
+    // 查询邮箱是否存在
     const [rows] = await db.execute(
-      'SELECT * FROM users WHERE name = ? AND password = ?',
-      [username, password]
+      'SELECT * FROM users WHERE email = ?',
+      [email]
     );
 
-    const user = rows[0];
-    if (!user || user.length === 0) {
-      return new Response(JSON.stringify({ statusCode: 401, ok: false, message: 'Invalid credentials' }),
-      { status: 401 }
+    if (!rows || rows.length === 0) {
+      return new Response(
+        JSON.stringify({ statusCode: 404, ok: false, message: 'Never registered' }),
+        { status: 404 }
       );
     }
 
+    const user = rows[0];
+    console.log(user);
     return new Response(
-      JSON.stringify({ statusCode: 200, ok: true, message: 'Login successful' }),
+      JSON.stringify({
+        statusCode: 200,
+        ok: true,
+        message: 'Login successful',
+        role_id: user.role_id 
+      }),
       { status: 200 }
     );
 
