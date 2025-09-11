@@ -1,20 +1,26 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import { List, ListItemButton, ListItemIcon, ListItemText, Collapse, Drawer, Toolbar, Box } from '@mui/material';
+import React, { useState, useCallback, useEffect } from 'react';
+import { List, ListItemButton, ListItemIcon, ListItemText, Collapse, Drawer, Toolbar, Box, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { usePathname } from 'next/navigation';
 import menuConfig from '../lib/menuConfig';
 import iconMap from '../lib/iconMap';
 
 export default function SideNavBar({ role }) {
-  const pathname = usePathname();
   const [expandedItemIds, setExpandedItemIds] = useState([]);
+  const [pathname, setPathname] = useState('');
+  const CourseIcon = iconMap['Course'];
+
+  useEffect(() => {
+    setPathname(window.location.pathname);
+  }, []);
 
   const handleClick = useCallback((item) => {
     if (item.children) {
       setExpandedItemIds((prev) =>
-        prev.includes(item.title) ? prev.filter((id) => id !== item.title) : [...prev, item.title]
+        prev.includes(item.title)
+          ? prev.filter((id) => id !== item.title)
+          : [...prev, item.title]
       );
     }
   }, []);
@@ -33,13 +39,17 @@ export default function SideNavBar({ role }) {
                   <Icon />
                 </ListItemIcon>
               )}
-              <ListItemText primary={item.title} />
-              {item.children && (expandedItemIds.includes(item.title) ? <ExpandLess /> : <ExpandMore />)}
+              <ListItemText
+                primary={item.title}
+                primaryTypographyProps={{ fontSize: '0.8rem' }} // font size
+              />
+              {item.children &&
+                (expandedItemIds.includes(item.title) ? <ExpandLess /> : <ExpandMore />)}
             </ListItemButton>
             {item.children && (
               <Collapse in={expandedItemIds.includes(item.title)} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding sx={{ pl: 7, '& .MuiListItemButton-root': { py: 0.3 } }}>
-                    {renderMenu(item.children)}
+                  {renderMenu(item.children)}
                 </List>
               </Collapse>
             )}
@@ -58,8 +68,16 @@ export default function SideNavBar({ role }) {
         [`& .MuiDrawer-paper`]: { width: 250, boxSizing: 'border-box' },
       }}
     >
-      <Toolbar />
-        <div>{role}</div>
+
+      <Box display="flex" alignItems="center" mt={2} mb={2}>
+        <CourseIcon sx={{ fontSize: 32, color: "#673ab7", mx: 2, pl: 1 }} />
+        <Typography variant="h9" fontWeight={600}>
+          EE6008
+        </Typography>
+      </Box>
+
+
+      <div style={{ padding: '0 16px', fontSize: '0.8rem', fontWeight: 'bold' }}>{role}</div>
       <Box sx={{ overflow: 'auto' }}>
         <List>{renderMenu(menuConfig[role] || [])}</List>
       </Box>
