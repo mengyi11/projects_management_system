@@ -15,7 +15,7 @@ export default function AdminDashboard() {
     return (
         <AdminLayout pathArr={pathArr} userRole={userRole}>
             <Typography variant='h4' sx={{ mb: 3 }}>Dashboard</Typography>
-            <Typography variant='h5'>Welcome Back!</Typography>
+            <Typography variant='h5' sx={{ mb: 3 }}>Welcome Back!</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid item size={{ xs: 12, md: 6 }}>
                     <Card sx={{ bgcolor: 'background.paper', p: 1, pb: 2 }} >
