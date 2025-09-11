@@ -79,17 +79,20 @@ const menuConfig = {
   ],
   Student: [
     {
-      title: "Project",
-      icon: "Work",
+      title: "Registration",
+      icon: "Registration",
       children: [
-        { title: "My Projects", path: "/projects/my" },
-        { title: "Register Project", path: "/projects/register" },
+        { title: "Planner", path: "/projects/my" },
+        { title: "Registration", path: "/projects/register" },
       ],
     },
     {
-      title: "Grade",
-      icon: "BarChart",
-      children: [{ title: "My Grades", path: "/grades/my" }],
+      title: "Project Management",
+      icon: "Project",
+       children: [
+        { title: "Allocated Project", path: "/projects/my" },
+        { title: "Peer Review", path: "/projects/register" },
+      ],
     },
   ],
 };
