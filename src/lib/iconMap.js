@@ -1,20 +1,25 @@
 import PersonIcon from '@mui/icons-material/Person';
-import EventIcon from '@mui/icons-material/Event';
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import WorkIcon from '@mui/icons-material/Work';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import GradingOutlinedIcon from '@mui/icons-material/GradingOutlined';
-import EmailIcon from '@mui/icons-material/Email';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import TopicIcon from '@mui/icons-material/Topic';
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
+import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 
 const iconMap = {
-  Person: PersonIcon,
-  Event: EventIcon,
+  Person: PersonAddAltOutlinedIcon,
+  Event: EventOutlinedIcon,
   Work: WorkIcon,
+  Project: StickyNote2OutlinedIcon,
   Grade: GradingOutlinedIcon,
-  Email: EmailIcon,
+  Email: EmailOutlinedIcon,
   Course: TopicIcon,
   Enter: ArrowForwardOutlinedIcon,
+  Proposal: NoteAltOutlinedIcon,
 };
 
 export default iconMap;

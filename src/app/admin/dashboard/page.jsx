@@ -10,7 +10,7 @@ export default function AdminDashboard() {
     const userRole = "admin";
     const UserIcon = iconMap["Person"];
     const SemIcon = iconMap["Event"];
-    const ProjIcon = iconMap["Work"];
+    const ProjIcon = iconMap["Project"];
     const GradeIcon = iconMap["Grade"];
     const Enter = iconMap["Enter"];
     return (
