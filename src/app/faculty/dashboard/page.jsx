@@ -9,7 +9,6 @@ export default function AdminDashboard() {
     const pathArr = ["Faculty", "Dashboard"];
     const userRole = "Faculty";
     const PropIcon = iconMap["Proposal"];
-    const SemIcon = iconMap["Event"];
     const ProjIcon = iconMap["Project"];
     const GradeIcon = iconMap["Grade"];
     const Enter = iconMap["Enter"];
