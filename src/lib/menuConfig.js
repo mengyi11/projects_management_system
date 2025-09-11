@@ -27,7 +27,7 @@ const menuConfig = {
     },
     {
       title: "Grade",
-      icon: "BarChart",
+      icon: "Grade",
       children: [
         { title: "View Project Grades", path: "/grades/projects" },
         { title: "View Grades Analytics", path: "/grades/analytics" },
