@@ -18,7 +18,7 @@ const menuConfig = {
     },
     {
       title: "Project",
-      icon: "Work",
+      icon: "Project",
       children: [
         { title: "Approved projects", path: "/projects/approved" },
         { title: "Student registrations", path: "/projects/registrations" },
@@ -32,6 +32,35 @@ const menuConfig = {
         { title: "View Project Grades", path: "/grades/projects" },
         { title: "View Grades Analytics", path: "/grades/analytics" },
       ],
+    },
+    {
+      title: "Email",
+      icon: "Email",
+      children: [
+        { title: "Template Management", path: "/email/templates" },
+        { title: "Email Manager", path: "/email/manager" },
+      ],
+    },
+  ],
+  faculty: [
+    {
+      title: "Proposal",
+      icon: "Proposal",
+      children: [
+        { title: "Add Proposal", path: "/projects/my" },
+        { title: "My Proposal", path: "/projects/my" },
+        { title: "All Proposal", path: "/projects/register" },
+      ],
+    },
+    {
+      title: "Project",
+      icon: "Project",
+      children: [{ title: "My Grades", path: "/grades/my" }],
+    },
+     {
+      title: "Grade",
+      icon: "Grade",
+      children: [{ title: "My Grades", path: "/grades/my" }],
     },
     {
       title: "Email",
