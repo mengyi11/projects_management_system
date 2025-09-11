@@ -7,7 +7,7 @@ import iconMap from '@/lib/iconMap';
 
 export default function AdminDashboard() {
     const pathArr = ["Admin", "Dashboard"];
-    const userRole = "admin";
+    const userRole = "Admin";
     const UserIcon = iconMap["Person"];
     const SemIcon = iconMap["Event"];
     const ProjIcon = iconMap["Project"];

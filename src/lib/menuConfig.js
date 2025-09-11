@@ -1,5 +1,5 @@
 const menuConfig = {
-  admin: [
+  Admin: [
     {
       title: "User",
       icon: "Person",
@@ -42,7 +42,7 @@ const menuConfig = {
       ],
     },
   ],
-  faculty: [
+  Faculty: [
     {
       title: "Proposal",
       icon: "Proposal",
@@ -71,7 +71,7 @@ const menuConfig = {
       ],
     },
   ],
-  student: [
+  Student: [
     {
       title: "Project",
       icon: "Work",
