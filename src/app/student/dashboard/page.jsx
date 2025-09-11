@@ -5,7 +5,7 @@ import { Box, Card, CardContent, Typography, CardActions, Button, Grid } from "@
 import AdminLayout from "@/components/AdminLayout";
 import iconMap from '@/lib/iconMap';
 
-export default function AdminDashboard() {
+export default function StudentDashboard() {
     const pathArr = ["Student", "Dashboard"];
     const userRole = "Student";
     const PersonIcon = iconMap["Person2"];
