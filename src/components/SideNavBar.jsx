@@ -35,8 +35,8 @@ export default function SideNavBar({ role }) {
           <div key={item.title}>
             <ListItemButton onClick={() => handleClick(item)} selected={selected} sx={{ pl: 2 }}>
               {Icon && (
-                <ListItemIcon>
-                  <Icon />
+                <ListItemIcon sx={{ mr: -2 }}>
+                  <Icon sx={{ p:0,m:0}}/>
                 </ListItemIcon>
               )}
               <ListItemText
@@ -44,11 +44,11 @@ export default function SideNavBar({ role }) {
                 primaryTypographyProps={{ fontSize: '0.8rem' }} // font size
               />
               {item.children &&
-                (expandedItemIds.includes(item.title) ? <ExpandLess /> : <ExpandMore />)}
+                (expandedItemIds.includes(item.title) ?  <ExpandMore /> : <ExpandLess /> )}
             </ListItemButton>
             {item.children && (
               <Collapse in={expandedItemIds.includes(item.title)} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ pl: 7, '& .MuiListItemButton-root': { py: 0.3 } }}>
+                <List component="div" disablePadding sx={{ pl: 5, '& .MuiListItemButton-root': { pt: 0 ,pb: 0.2 } }}>
                   {renderMenu(item.children)}
                 </List>
               </Collapse>
