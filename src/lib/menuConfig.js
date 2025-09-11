@@ -48,19 +48,25 @@ const menuConfig = {
       icon: "Proposal",
       children: [
         { title: "Add Proposal", path: "/projects/my" },
-        { title: "My Proposal", path: "/projects/my" },
-        { title: "All Proposal", path: "/projects/register" },
+        { title: "My Proposals", path: "/projects/my" },
+        { title: "All Proposals", path: "/projects/register" },
       ],
     },
     {
       title: "Project",
       icon: "Project",
-      children: [{ title: "My Grades", path: "/grades/my" }],
+      children: [
+        { title: "My Projects", path: "/projects/my" },
+        { title: "All Projects", path: "/projects/register" },
+      ],
     },
-     {
+    {
       title: "Grade",
       icon: "Grade",
-      children: [{ title: "My Grades", path: "/grades/my" }],
+      children: [
+        { title: "Evaluation", path: "/grades/my" },
+        { title: "Analytics", path: "/grades/my" },
+      ],
     },
     {
       title: "Email",
