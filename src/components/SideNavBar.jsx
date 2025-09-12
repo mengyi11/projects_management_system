@@ -5,11 +5,13 @@ import { List, ListItemButton, ListItemIcon, ListItemText, Collapse, Drawer, Too
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import menuConfig from '../lib/menuConfig';
 import iconMap from '../lib/iconMap';
+import { useRouter } from "next/navigation";
 
 export default function SideNavBar({ role }) {
   const [expandedItemIds, setExpandedItemIds] = useState([]);
   const [pathname, setPathname] = useState('');
   const CourseIcon = iconMap['Course'];
+  const router = useRouter();
 
   useEffect(() => {
     setPathname(window.location.pathname);
@@ -21,8 +23,11 @@ export default function SideNavBar({ role }) {
         prev.includes(item.title)
           ? prev.filter((id) => id !== item.title)
           : [...prev, item.title]
-      );
-    }
+      )
+    } else if (item.path) {
+      router.push(item.path)
+    };
+
   }, []);
 
   const renderMenu = useCallback(
@@ -36,7 +41,7 @@ export default function SideNavBar({ role }) {
             <ListItemButton onClick={() => handleClick(item)} selected={selected} sx={{ pl: 2 }}>
               {Icon && (
                 <ListItemIcon sx={{ mr: -3 }}>
-                  <Icon sx={{ p:0,m:0, fontSize:20}}/>
+                  <Icon sx={{ p: 0, m: 0, fontSize: 20 }} />
                 </ListItemIcon>
               )}
               <ListItemText
@@ -44,11 +49,11 @@ export default function SideNavBar({ role }) {
                 primaryTypographyProps={{ fontSize: '0.8rem' }} // font size
               />
               {item.children &&
-                (expandedItemIds.includes(item.title) ?  <ExpandMore /> : <ExpandLess /> )}
+                (expandedItemIds.includes(item.title) ? <ExpandMore /> : <ExpandLess />)}
             </ListItemButton>
             {item.children && (
               <Collapse in={expandedItemIds.includes(item.title)} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding sx={{ pl: 4, '& .MuiListItemButton-root': { pt: 0 ,pb: 0.2 } }}>
+                <List component="div" disablePadding sx={{ pl: 4, '& .MuiListItemButton-root': { pt: 0, pb: 0.2 } }}>
                   {renderMenu(item.children)}
                 </List>
               </Collapse>
@@ -70,7 +75,7 @@ export default function SideNavBar({ role }) {
     >
 
       <Box display="flex" alignItems="center" mt={2} mb={2}>
-        <CourseIcon sx={{ fontSize: 32, color: "#673ab7", mx: 2, pl: 1 }} />
+        <CourseIcon sx={{ fontSize: 32, mx: 2, pl: 1 }} />
         <Typography variant="h9" fontWeight={600}>
           EE6008
         </Typography>
