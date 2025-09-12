@@ -12,6 +12,7 @@ let customTheme = createTheme({
             styleOverrides: {
                 root: {
                     borderRadius: '0.5rem',
+                    boxShadow: 'none',
                 },
             },
         },
@@ -51,10 +52,11 @@ let customTheme = createTheme({
         MuiLink: {
             styleOverrides: {
                 root: {
-                    textDecoration: 'none',
+                    textDecoration: 'none', 
                     color: 'inherit',
+                    transition: 'all 0.3s',
                     '&:hover': {
-                        color: 'white',
+                        color: '#000000dd',     
                     },
                 },
             },
@@ -83,6 +85,19 @@ let customTheme = createTheme({
                 columnHeaderTitle: {
                     fontWeight: 'bold'
                 },
+                row: {
+                     transition: 'all 0.2s',
+                    '&:nth-of-type(even)': {
+                        backgroundColor: '#fbf9fc',  
+                    },
+                    '&:nth-of-type(odd)': {
+                        backgroundColor: '#fbf9fc', 
+                    },
+                    '&:hover': {
+                        backgroundColor: '#ecececff',  
+                    },
+                },
+
             },
         },
     },
@@ -125,13 +140,17 @@ let customTheme = createTheme({
         },
         dashTitle: {
             fontWeight: 1000,
-            fontSize: '1.2rem',
+            fontSize: '1.1rem',
+        },
+        nav: {
+            fontSize: '0.8rem',
+
         }
     },
     palette: {
         background: {
-            default: '#F3F3FA',
-            paper: '#fbf9fc',
+            default: '#fafaffff',
+            paper: '#f7f5f9',
         },
         primary: {
             main: "#31326F",
