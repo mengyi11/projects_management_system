@@ -5,16 +5,16 @@ import { Box, Card, CardContent, Typography, CardActions, Button, Grid } from "@
 import AdminLayout from "@/components/AdminLayout";
 import iconMap from '@/lib/iconMap';
 
-export default function AdminDashboard() {
-    const pathArr = ["Admin", "Dashboard"];
-    const userRole = "Admin";
+export default function Admin() {
+    const currentPathArr = ['Admin'];
+    // const userRole = "Admin";
     const UserIcon = iconMap["Person"];
     const SemIcon = iconMap["Event"];
     const ProjIcon = iconMap["Project"];
     const GradeIcon = iconMap["Grade"];
     const Enter = iconMap["Enter"];
     return (
-        <AdminLayout pathArr={pathArr} userRole={userRole}>
+        <AdminLayout pathArr={currentPathArr}>
             <Typography variant='h4'>Dashboard</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid item size={{ xs: 12, md: 6, lg: 4 }}>
@@ -22,9 +22,8 @@ export default function AdminDashboard() {
                         <CardContent >
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                                 <UserIcon sx={{ fontSize: 25 }} />
-                                <Typography variant='dashTitle'  >
-                                    User Management
-                                </Typography>
+                                <Typography variant='dashTitle' >User Management</Typography>
+                                
                             </Box>
                             <Typography sx={{ color: "text.secondary", mb: 1, wordBreak: 'break-word', }}>
                                 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -37,6 +36,7 @@ export default function AdminDashboard() {
                             </Box>
                         </CardContent>
                         <CardActions>
+                            {/* <Button variant="outlined"> */}
                             <Button variant="contained" size="medium" color='white' fullWidth >
                                 Manage User
                                 <Enter sx={{ fontSize: 20, ml: 3 }} />
