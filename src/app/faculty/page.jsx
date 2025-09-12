@@ -3,7 +3,7 @@
 import React from 'react';
 import { Box, Card, CardContent, Typography, CardActions, Button, Grid } from "@mui/material";
 import AdminLayout from "@/components/AdminLayout";
-import iconMap from '@/lib/iconMap';
+import iconMap from '@/styles/iconMap';
 
 export default function Facultyashboard() {
     const pathArr = ["Faculty", "Dashboard"];
