@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { List, ListItemButton, ListItemIcon, ListItemText, Collapse, Drawer, Toolbar, Box, Typography } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import menuConfig from '../lib/menuConfig';
-import iconMap from '../lib/iconMap';
+import iconMap from '../styles/iconMap';
 import { useRouter } from "next/navigation";
 
 export default function SideNavBar({ role }) {
