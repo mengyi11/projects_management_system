@@ -25,11 +25,11 @@ export default function Login() {
       if (ok && statusCode === 200) {
         toast.success("Login successfully");
         if (role_id === 1) {
-          router.push('/admin/dashboard');
+          router.push('/admin');
         } else if (role_id === 2) {
-          router.push('/faculty/dashboard');
+          router.push('/faculty');
         } else if (role_id === 3) {
-          router.push('/student/dashboard');
+          router.push('/student');
         }
       }
     } catch (error) {
