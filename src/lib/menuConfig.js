@@ -4,41 +4,41 @@ const menuConfig = {
       title: "User",
       icon: "Person",
       children: [
-        { title: "Manage faculty", path: "/faculty" },
-        { title: "Manage students", path: "/students" },
+        { title: "Manage Faculty", path: "/admin/user/ManageFaculty" },
+        { title: "Manage Students", path: "/admin/user/ManageStudents" },
       ],
     },
     {
       title: "Semester",
       icon: "Event",
       children: [
-        { title: "Manage semester", path: "/semester" },
-        { title: "Venue details", path: "/venues" },
+        { title: "Manage Semester", path: "/admin/semester/ManageSemester" },
+        { title: "Venue Details", path: "/admin/semester/venues" },
       ],
     },
     {
       title: "Project",
       icon: "Project",
       children: [
-        { title: "Approved projects", path: "/projects/approved" },
-        { title: "Student registrations", path: "/projects/registrations" },
-        { title: "Generate allocation", path: "/projects/allocation" },
+        { title: "Approved Projects", path: "/admin/project/ApprovedProjects" },
+        { title: "Student Registrations", path: "/admin/project/StudentRegistrations" },
+        { title: "Generate Allocation", path: "/admin/project/GenerateAllocation" },
       ],
     },
     {
       title: "Grade",
       icon: "Grade",
       children: [
-        { title: "View Project Grades", path: "/grades/projects" },
-        { title: "View Grades Analytics", path: "/grades/analytics" },
+        { title: "View Project Grades", path: "/admin/grade/ProjectGrades" },
+        { title: "View Grades Analytics", path: "/admin/grade/GradeAnalytics" },
       ],
     },
     {
       title: "Email",
       icon: "Email",
       children: [
-        { title: "Template Management", path: "/email/templates" },
-        { title: "Email Manager", path: "/email/manager" },
+        { title: "Template Management", path: "/admin/email/EmailTemplates" },
+        { title: "Email Manager", path: "/admin/email/EmailManager" },
       ],
     },
   ],
