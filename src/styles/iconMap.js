@@ -10,6 +10,9 @@ import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import StickyNote2OutlinedIcon from '@mui/icons-material/StickyNote2Outlined';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import FolderSpecialOutlinedIcon from '@mui/icons-material/FolderSpecialOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import SearchIcon from '@mui/icons-material/Search'
 
 const iconMap = {
   Person: PersonAddAltOutlinedIcon,
@@ -23,6 +26,8 @@ const iconMap = {
   Enter: ArrowForwardOutlinedIcon,
   Proposal: NoteAltOutlinedIcon,
   Registration: FolderSpecialOutlinedIcon,
+  Remove: DeleteIcon,
+  Search: SearchIcon,
 };
 
 export default iconMap;
