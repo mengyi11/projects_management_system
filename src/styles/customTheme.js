@@ -52,11 +52,11 @@ let customTheme = createTheme({
         MuiLink: {
             styleOverrides: {
                 root: {
-                    textDecoration: 'none', 
+                    textDecoration: 'none',
                     color: 'inherit',
                     transition: 'all 0.3s',
                     '&:hover': {
-                        color: '#000000dd',     
+                        color: '#000000dd',
                     },
                 },
             },
@@ -86,15 +86,15 @@ let customTheme = createTheme({
                     fontWeight: 'bold'
                 },
                 row: {
-                     transition: 'all 0.2s',
+                    transition: 'all 0.3s',
                     '&:nth-of-type(even)': {
-                        backgroundColor: '#fbf9fc',  
+                        backgroundColor: '#fbf9fc',
                     },
                     '&:nth-of-type(odd)': {
-                        backgroundColor: '#fbf9fc', 
+                        backgroundColor: '#fbf9fc',
                     },
                     '&:hover': {
-                        backgroundColor: '#ecececff',  
+                        backgroundColor: '#ecececff',
                     },
                 },
 
@@ -157,7 +157,7 @@ let customTheme = createTheme({
             contrastText: "#fff",
         },
         secondary: {
-            main: "#3D9DB3",
+            main: "#57576aff",
             contrastText: "#fff",
         },
         error: {
