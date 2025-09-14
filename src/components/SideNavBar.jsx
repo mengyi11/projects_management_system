@@ -46,7 +46,7 @@ export default function SideNavBar({ role }) {
               )}
               <ListItemText
                 primary={item.title}
-                primaryTypographyProps={{ fontSize: '0.8rem' }} // font size
+                primaryTypographyProps={{ fontSize: '0.8rem', color: 'secondary' }} // font size
               />
               {item.children &&
                 (expandedItemIds.includes(item.title) ? <ExpandMore /> : <ExpandLess />)}
@@ -89,3 +89,67 @@ export default function SideNavBar({ role }) {
     </Drawer>
   );
 }
+
+// 'use client';
+
+// import * as React from 'react';
+// import { Box, Typography } from '@mui/material';
+// import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
+// import { TreeItem } from '@mui/x-tree-view/TreeItem';
+// import iconMap from '../styles/iconMap';
+// import menuConfig from '../lib/menuConfig';
+// import { useRouter } from 'next/navigation';
+
+// export default function SideNavBar({ role }) {
+//   const router = useRouter();
+//   const CourseIcon = iconMap['Course'];
+
+//   const handleClick = (item) => {
+//     if (item.path) router.push(item.path);
+//   };
+
+//   const renderTree = (items) =>
+//     items.map((item) => {
+//       const Icon = iconMap[item.icon];
+//       return (
+//         <TreeItem
+//           key={item.title}
+//           itemId={item.title}
+//           label={
+//             <Box display="flex" alignItems="center">
+//               {Icon && <Icon sx={{ fontSize: 18, mr: 1 }} />}
+//               {item.title}
+//             </Box>
+//           }
+//           onClick={() => handleClick(item)}
+//         >
+//           {item.children && renderTree(item.children)}
+//         </TreeItem>
+//       );
+//     });
+
+//   return (
+//     <Box
+//       sx={{
+//         width: 250,
+//         flexShrink: 0,
+//         overflow: 'auto',
+//         bgcolor: 'background.paper',
+//         p: 2,
+//       }}
+//     >
+//       <Box display="flex" alignItems="center" mb={2}>
+//         <CourseIcon sx={{ fontSize: 32, mx: 2 }} />
+//         <Typography variant="h6" fontWeight={600}>
+//           EE6008
+//         </Typography>
+//       </Box>
+
+//       <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold', mb: 1 }}>
+//         {role}
+//       </Typography>
+
+//       <SimpleTreeView>{renderTree(menuConfig[role] || [])}</SimpleTreeView>
+//     </Box>
+//   );
+// }
