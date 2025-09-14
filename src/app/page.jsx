@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import { TextField, Button, Box, Typography } from '@mui/material';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import axios from 'axios';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -47,8 +47,6 @@ export default function Login() {
       justifyContent="center"
       minHeight="100vh"
     >
-      <ToastContainer position="top-center" />
-
       <Typography variant="h4" mb={3}>Login</Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ width: '300px' }}>
         <TextField
