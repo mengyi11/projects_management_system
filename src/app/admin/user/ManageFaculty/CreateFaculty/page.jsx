@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Paper, Grid, Typography, FormControlLabel, Switch, Box, Tab } from "@mui/material";
-import AdminLayout from "@/components/AdminLayout";
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { toast } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
-import CTextField from "@/components/input/CTextField";
 import axios from 'axios';
+import AdminLayout from "@/components/AdminLayout";
+import CTextField from "@/components/input/CTextField";
 import ClickLoadingButton from "@/components/button/ClickLoadingButton";
 
 export default function CreateFaculty() {
