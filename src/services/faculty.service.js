@@ -29,3 +29,31 @@ export const createFaculty = async (userData, facultyData) => {
         connection.release();
     }
 };
+
+
+export const getFaculty = async () => {
+    console.log("service: getFaculty")
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        const [facultyResult] = await connection.query(
+            `SELECT 
+                f.id AS id,
+                u.name AS name,
+                u.email AS email,
+                r.role_name AS role,
+                f.is_course_coordinator AS coordinator
+            FROM users AS u
+            INNER JOIN professors AS f
+                ON f.user_id = u.id
+            INNER JOIN roles AS r
+                ON r.id = u.role_id;`
+        );
+        return facultyResult;
+    } catch (err) {
+        console.log("service:", err);
+        throwError('Database error', 500, err);
+    } finally {
+        connection.release();
+    }
+};
