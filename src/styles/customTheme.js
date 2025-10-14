@@ -29,11 +29,11 @@ let customTheme = createTheme({
                     color: 'black',
                     transition: 'all 0.3s',
                     '&:hover': {
-                        backgroundColor: '#3D9DB3',
+                        backgroundColor: '#c7cce3ff',
                         color: 'white',
                     },
                     '&.Mui-selected': {
-                        backgroundColor: '#3D9DB3',
+                        backgroundColor: '#d1d3dbff',
                         color: 'white',
                         opacity: 1,
                     },
