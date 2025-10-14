@@ -13,6 +13,8 @@ import FolderSpecialOutlinedIcon from '@mui/icons-material/FolderSpecialOutlined
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import SearchIcon from '@mui/icons-material/Search'
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 const iconMap = {
   Person: PersonAddAltOutlinedIcon,
@@ -28,6 +30,8 @@ const iconMap = {
   Registration: FolderSpecialOutlinedIcon,
   Remove: DeleteIcon,
   Search: SearchIcon,
+  Edit: EditNoteOutlinedIcon,
+  Timeline: TimelineIcon
 };
 
 export default iconMap;
