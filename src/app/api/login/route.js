@@ -1,11 +1,10 @@
-import { db } from '../../../lib/db';
+import pool from '@/lib/db';
 
 export async function POST(req) {
   try {
     const { email } = await req.json();
 
-    // 查询邮箱是否存在
-    const [rows] = await db.execute(
+    const [rows] = await pool.query(
       'SELECT * FROM users WHERE email = ?',
       [email]
     );
@@ -24,7 +23,7 @@ export async function POST(req) {
         statusCode: 200,
         ok: true,
         message: 'Login successful',
-        role_id: user.role_id 
+        role_id: user.role_id
       }),
       { status: 200 }
     );
