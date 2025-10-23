@@ -97,44 +97,6 @@ export const updateSemester = async (updateData) => {
     try {
     const { id, semName, minCapacity, maxCapacity, academicYear, ...otherFields } = updateData;
 
-    //     const updateFields = [];
-    //     const queryParams = [];
-
-    //     if (name !== undefined) {
-    //         updateFields.push("name = ?");
-    //         queryParams.push(name);
-    //     }
-    //     if (start_date !== undefined) {
-    //         updateFields.push("start_date = ?");
-    //         queryParams.push(start_date);
-    //     }
-    //     if (end_date !== undefined) {
-    //         updateFields.push("end_date = ?");
-    //         queryParams.push(end_date);
-    //     }
-    //     if (is_active !== undefined) {
-    //         updateFields.push("is_active = ?");
-    //         queryParams.push(is_active);
-    //     }
-
-    //     if (updateFields.length === 0) {
-    //         const [currentSemester] = await connection.query(
-    //             "SELECT * FROM semesters WHERE id = ?",
-    //             [id]
-    //         );
-    //         return currentSemester[0] || null;
-    //     }
-
-    // const updateQuery = `
-    //         UPDATE semesters 
-    //         SET name = ?, academic_year = ?, min_cap = ?, max_cap = ?
-    //         WHERE id = ?
-    //     `;
-    //     queryParams.push(id); // 最后添加 where 条件的 id
-
-    //     await connection.query(updateQuery, queryParams);
-
-    //     // 更新后查询最新数据并返回
     const updatedSemester = await connection.query(
         `
             UPDATE semesters 
@@ -150,6 +112,144 @@ export const updateSemester = async (updateData) => {
     } catch (err) {
         console.log("service error: ", err);
         throwError("Failed to update semester", 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+//TimeLine functions
+// 1. 查询指定 semester_id 的时间线
+export const getSemesterTimeline = async (semesterId) => {
+    console.log("service: getSemesterTimeline for semester_id:", semesterId);
+    const connection = await pool.getConnection();
+    try {
+        const [rows] = await connection.execute(
+            'SELECT * FROM semester_timelines WHERE semester_id = ?',
+            [semesterId]
+        );
+        // 返回查询结果（若存在则为数组第一项，否则为 null）
+        console.log("fetched timeline:", rows);
+        return rows.length > 0 ? rows[0] : null;
+    } catch (err) {
+        console.log("service: getSemesterTimeline error", err);
+        throwError('Failed to get semester timeline', 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+// 2. 创建新的时间线（仅当不存在时调用）
+export const createSemesterTimeline = async (timelineData) => {
+    console.log("service: createSemesterTimeline");
+    const connection = await pool.getConnection();
+    try {
+        const {
+            semester_id,
+            sem_start_date,
+            sem_end_date,
+            faculty_proposal_submission_start,
+            faculty_proposal_submission_end,
+            faculty_proposal_review_start,
+            faculty_proposal_review_end,
+            student_registration_start,
+            student_registration_end,
+            faculty_rank_entry_start,
+            faculty_rank_entry_end,
+            student_peer_review_start,
+            student_peer_review_end
+        } = timelineData;
+
+        const [result] = await connection.execute(
+            `INSERT INTO semester_timelines 
+             (semester_id, sem_start_date, sem_end_date, faculty_proposal_submission_start, faculty_proposal_submission_end, 
+              faculty_proposal_review_start, faculty_proposal_review_end, student_registration_start, student_registration_end, 
+              faculty_rank_entry_start, faculty_rank_entry_end, student_peer_review_start, student_peer_review_end) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+                semester_id,
+                sem_start_date,
+                sem_end_date,
+                faculty_proposal_submission_start,
+                faculty_proposal_submission_end,
+                faculty_proposal_review_start,
+                faculty_proposal_review_end,
+                student_registration_start,
+                student_registration_end,
+                faculty_rank_entry_start,
+                faculty_rank_entry_end,
+                student_peer_review_start,
+                student_peer_review_end
+            ]
+        );
+
+        await connection.commit();
+        return { ...result, isNew: true }; // 标记为新创建
+    } catch (err) {
+        console.log("service: createSemesterTimeline error", err);
+        throwError('Failed to create semester timeline', 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+// 3. 更新现有时间线（仅当存在时调用）
+export const updateSemesterTimeline = async (timelineData) => {
+    console.log("service: updateSemesterTimeline");
+    const connection = await pool.getConnection();
+    try {
+        const {
+            semester_id,
+            sem_start_date,
+            sem_end_date,
+            faculty_proposal_submission_start,
+            faculty_proposal_submission_end,
+            faculty_proposal_review_start,
+            faculty_proposal_review_end,
+            student_registration_start,
+            student_registration_end,
+            faculty_rank_entry_start,
+            faculty_rank_entry_end,
+            student_peer_review_start,
+            student_peer_review_end
+        } = timelineData;
+
+        const [result] = await connection.execute(
+            `UPDATE semester_timelines SET 
+             sem_start_date = ?, 
+             sem_end_date = ?, 
+             faculty_proposal_submission_start = ?, 
+             faculty_proposal_submission_end = ?, 
+             faculty_proposal_review_start = ?, 
+             faculty_proposal_review_end = ?, 
+             student_registration_start = ?, 
+             student_registration_end = ?, 
+             faculty_rank_entry_start = ?, 
+             faculty_rank_entry_end = ?, 
+             student_peer_review_start = ?, 
+             student_peer_review_end = ? 
+             WHERE semester_id = ?`,
+            [
+                sem_start_date,
+                sem_end_date,
+                faculty_proposal_submission_start,
+                faculty_proposal_submission_end,
+                faculty_proposal_review_start,
+                faculty_proposal_review_end,
+                student_registration_start,
+                student_registration_end,
+                faculty_rank_entry_start,
+                faculty_rank_entry_end,
+                student_peer_review_start,
+                student_peer_review_end,
+                semester_id // WHERE 条件
+            ]
+        );
+
+        await connection.commit();
+        return { ...result, isNew: false }; // 标记为更新
+    } catch (err) {
+        console.log("service: updateSemesterTimeline error", err);
+        throwError('Failed to update semester timeline', 500, err);
     } finally {
         connection.release();
     }
