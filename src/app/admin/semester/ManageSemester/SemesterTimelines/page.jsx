@@ -15,7 +15,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import dayjs from 'dayjs';
-import TimelineView from '@/components/views/ TimelineView';
+import TimelineView from '@/components/views/TimelineView';
 
 
 // 月份列表
