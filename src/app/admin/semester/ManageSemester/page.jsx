@@ -166,7 +166,7 @@ export default function ManageSemester() {
         event.stopPropagation();
         console.log("Timeline for semester ID:", cellValues.row.id);
         // router.push(`/admin/semester/${cellValues.row.id}/manage-timeline`);
-        router.push(`/admin/semester/ManageSemester/SemesterTimelines`);
+        router.push(`/admin/semester/ManageSemester/SemesterTimelines?semId=${cellValues.row.id}`);
     };
 
     //Edit
@@ -208,32 +208,7 @@ export default function ManageSemester() {
     };
 
     const onEditSubmit = async (data) => {
-        // console.log(data);
-        // setIsLoading(true)
-        // try {
-        //     const courseResponse = await axios.post(
-        //         "/api/admin/semesters/all",
-        //         {
-        //             // await req.json()
-        //             academicYear: data.academicYear,
-        //             semName: data.semName,
-        //             minCapacity: data.minCapacity,
-        //             maxCapacity: data.maxCapacity,
-        //             start_date: data.start_date
-        //         }
-        //     );
-        //     console.log("courseResponse:", courseResponse)
-        //     if (courseResponse.status === 201) {
-        //         toast.success(`Create Successfully`);
-        //         setIsCreateDialog(false);
-        //     }
-        // } catch (error) {
-        //     // alert("Failed to create semester")
-        //     const err = error.response?.data?.message ?? error.message;
-        //     toast.error(err);
-        // } finally {
-        //     setIsLoading(false)
-        // }
+
         console.log("Edit data:", data);
         try {
             setIsLoading(true);
