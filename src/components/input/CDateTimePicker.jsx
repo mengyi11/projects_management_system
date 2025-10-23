@@ -24,6 +24,7 @@ const CDateTimePicker = ({
     maxDate,
     disablePast = false,
     disableFuture = false,
+    disabled = false,
     onChange
 }) => {
     // 1. 先定义resolveDefaultValue函数
@@ -90,7 +91,7 @@ const CDateTimePicker = ({
                             value={field.value ? dayjs(field.value) : null}
                             minDate={disablePast ? dayjs() : (minDate ? dayjs(minDate) : null)}
                             maxDate={disableFuture ? dayjs() : (maxDate ? dayjs(maxDate) : null)}
-                            disabled={props?.disabled || false}
+                            disabled={disabled}
                             format="YYYY-MM-DD HH:mm"
                             slotProps={{
                                 textField: {
@@ -126,7 +127,7 @@ const CDateTimePicker = ({
                                     },
                                 },
                                 actionBar: {
-                                    actions: ['clear'],
+                                    actions: ['clear', 'cancel', 'accept'],
                                     sx: {
                                         padding: '4px 8px',
                                     },
@@ -183,7 +184,7 @@ const CDateTimePicker = ({
                         },
                     },
                     actionBar: {
-                        actions: ['clear'],
+                        actions: ['clear', 'cancel', 'accept'],
                         sx: {
                             padding: '4px 8px',
                         },
