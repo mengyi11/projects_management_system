@@ -1,4 +1,5 @@
 const semesterManager = require('@/services/semester.service');
+import { handleError } from '@/lib/errorHandler';
 
 
 export const GET = async (req, { params }) => {
