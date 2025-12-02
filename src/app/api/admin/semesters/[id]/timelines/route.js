@@ -76,14 +76,6 @@ export const GET = async (req, { params }) => {
         // 关键修复：await 解析 params（Next.js 14+ 动态路由参数需异步获取）
         const resolvedParams = await params;
 
-        // 校验参数是否存在
-        if (!resolvedParams || !resolvedParams.id) {
-            return NextResponse.json(
-                { ok: false, message: 'semesterId is required in URL' },
-                { status: 400 }
-            );
-        }
-
         const semesterId = resolvedParams.id; // 从解析后的 params 中获取 id
         console.log("semesterId:", semesterId);
 

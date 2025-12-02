@@ -16,62 +16,7 @@ import { toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import dayjs from 'dayjs';
 import TimelineView from '@/components/views/TimelineView';
-
-
-// 月份列表
-const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-
-
-// 模拟后端返回的学期时间线数据
-const timelineData = [
-    {
-        title: 'Semester Period',
-        status: 'In Progress',
-        start: '01 May 2023',
-        end: '01 Sep 2025',
-        description: 'Overall semester duration'
-    },
-    {
-        title: 'Faculty Proposal Submission',
-        status: 'In Progress',
-        start: '13 Apr 2024',
-        end: '31 Mar 2025',
-        description: 'Faculty submit project proposals'
-    },
-    {
-        title: 'Faculty Proposal Review',
-        status: 'In Progress',
-        start: '01 Mar 2025',
-        end: '01 Apr 2025',
-        description: 'Review and approve proposals'
-    },
-    {
-        title: 'Student Registration',
-        status: 'Upcoming',
-        start: '30 Mar 2025',
-        end: '20 Apr 2025',
-        description: 'Students register for projects'
-    },
-    {
-        title: 'Faculty Mark Entry',
-        status: 'In Progress',
-        start: '01 Mar 2025',
-        end: '31 May 2025',
-        description: 'Faculty enter project marks'
-    },
-    {
-        title: 'Student Peer Review',
-        status: 'Upcoming',
-        start: '31 Mar 2025',
-        end: '30 Jun 2025',
-        description: 'Students review peers\' work'
-    },
-];
-
+import ProgramView from '@/components/views/ProgramView';
 
 
 export default function SemesterTimelines() {
@@ -84,7 +29,6 @@ export default function SemesterTimelines() {
     const searchParams = useSearchParams();
     // 1. 从 URL 获取 semId（如 ?semId=1）
     const semId = searchParams.get('semId');
-    const [savedSemId, setSavedSemId] = useState(''); // 保存 semId 到状态
 
 
     const methods = useForm({
@@ -361,96 +305,6 @@ export default function SemesterTimelines() {
                 <Box sx={{ backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', }}>
                     {/* 1. 时间线事件列表（默认激活） */}
                     {activeTab === 0 && (
-                        // <Box>
-                        //     {/* 学期信息卡片 */}
-                        //     <Card sx={{ mb: 4 }}>
-                        //         <CardContent>
-                        //             <Typography variant="h5" gutterBottom>
-                        //                 Semester Timeline
-                        //             </Typography>
-                        //             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        //                 <Typography variant="body1" sx={{ mr: 2 }}>
-                        //                     2025 Semester 1
-                        //                 </Typography>
-                        //                 <Chip
-                        //                     label="Active"
-                        //                     sx={{
-                        //                         backgroundColor: '#80b1e3ff',
-                        //                         p: 0,
-                        //                         m: 0
-                        //                     }}
-                        //                 />
-                        //             </Box>
-
-                        //             {/* 时间线卡片网格 */}
-                        //             <Grid container spacing={3}>
-                        //                 {timelineData.map((event, index) => (
-                        //                     <Grid item size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                        //                         <Card sx={{
-                        //                             height: '100%',
-                        //                             transition: 'box-shadow 0.2s',
-                        //                             '&:hover': { boxShadow: '0 4px 8px rgba(0,0,0,0.08)' },
-                        //                             borderTop: event.status === 'In Progress'
-                        //                                 ? '3px solid #e6c611ff'
-                        //                                 : '3px solid #757575'
-                        //                         }}>
-                        //                             <CardContent sx={{ p: 2.5 }}>
-                        //                                 <Box sx={{
-                        //                                     display: 'flex',
-                        //                                     justifyContent: 'space-between',
-                        //                                     alignItems: 'center',
-                        //                                     mb: 2
-                        //                                 }}>
-                        //                                     <Typography variant="body1" fontWeight="medium" sx={{ wordBreak: 'break-word' }}>
-                        //                                         {event.title}
-                        //                                     </Typography>
-                        //                                     <Chip
-                        //                                         label={event.status}
-                        //                                         sx={{
-                        //                                             backgroundColor: event.status === 'In Progress'
-                        //                                                 ? '#e9c948ff'
-                        //                                                 : '#b9b9b9ff',
-                        //                                             color: event.status === 'In Progress'
-                        //                                                 ? '#875a00ff'
-                        //                                                 : '#676767ff',
-                        //                                             textTransform: 'capitalize'
-                        //                                         }}
-                        //                                     />
-                        //                                 </Box>
-
-                        //                                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                        //                                     <CalendarMonth
-                        //                                         fontSize="small"
-                        //                                         sx={{ mr: 1, color: 'text.secondary' }}
-                        //                                     />
-                        //                                     <Typography variant="body2" color="text.secondary">
-                        //                                         <span sx={{ fontWeight: 500, color: 'text.primary' }}>Start:</span> {event.start}
-                        //                                     </Typography>
-                        //                                 </Box>
-
-                        //                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        //                                     <Event
-                        //                                         fontSize="small"
-                        //                                         sx={{ mr: 1, color: 'text.secondary' }}
-                        //                                     />
-                        //                                     <Typography variant="body2" color="text.secondary">
-                        //                                         <span sx={{ fontWeight: 500, color: 'text.primary' }}>End:</span> {event.end}
-                        //                                     </Typography>
-                        //                                 </Box>
-
-                        //                                 {event.description && (
-                        //                                     <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontStyle: 'italic' }}>
-                        //                                         {event.description}
-                        //                                     </Typography>
-                        //                                 )}
-                        //                             </CardContent>
-                        //                         </Card>
-                        //                     </Grid>
-                        //                 ))}
-                        //             </Grid>
-                        //         </CardContent>
-                        //     </Card>
-                        // </Box>
                         <TimelineView
                             timelineData={timelineData}  // 直接使用转换后的timelineData状态
                             semesterName={`2025 Semester`}  // 可根据实际学期名动态传递
@@ -465,29 +319,7 @@ export default function SemesterTimelines() {
                 )}
                 {/* 3. 课程项目管理（占位） */}
                 {activeTab === 2 && (
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        py: 8,
-                        textAlign: 'center'
-                    }}>
-                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 500 }}>
-                            Programmes Management
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary" mb={4} maxWidth="600">
-                            Manage programmes associated with 2025 Semester 1. Add, edit, or remove programmes here.
-                        </Typography>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            sx={{ textTransform: 'none', px: 4, py: 1.2 }}
-                            disabled
-                        >
-                            Coming Soon
-                        </Button>
-                    </Box>
+                    <ProgramView semId={semId} />
                 )}
             </Box>
         </AdminLayout>

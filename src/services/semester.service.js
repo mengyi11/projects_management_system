@@ -95,16 +95,16 @@ export const updateSemester = async (updateData) => {
 
     const connection = await pool.getConnection();
     try {
-    const { id, semName, minCapacity, maxCapacity, academicYear, ...otherFields } = updateData;
+        const { id, semName, minCapacity, maxCapacity, academicYear, ...otherFields } = updateData;
 
-    const updatedSemester = await connection.query(
-        `
+        const updatedSemester = await connection.query(
+            `
             UPDATE semesters 
             SET name = ?, academic_year = ?, min_cap = ?, max_cap = ?
             WHERE id = ?
         `,
-        [semName, academicYear, minCapacity, maxCapacity, id]
-    );
+            [semName, academicYear, minCapacity, maxCapacity, id]
+        );
 
         await connection.commit(); // 提交事务
 
@@ -253,4 +253,185 @@ export const updateSemesterTimeline = async (timelineData) => {
     } finally {
         connection.release();
     }
+};
+
+
+
+
+//getSemesterProgramme 
+export const getSemesterProgramme = async (semesterId) => {
+    console.log("service: getSemesterProgramme for semester_id:", semesterId);
+    const connection = await pool.getConnection();
+    try {
+        const [rows] = await connection.execute(
+            `SELECT 
+                    p.id AS programme_id,
+                    p.name AS name,
+                    p.programme_code,
+                    prof.id AS coordinator_professor_id,
+                    u.name AS coordinator_professor_name,
+                    u.email AS coordinator_professor_email
+                    FROM programmes p
+                    INNER JOIN professors prof 
+                    ON p.coordinator_professor_id = prof.id
+                    INNER JOIN users u 
+                    ON prof.user_id = u.id
+                    WHERE p.semester_id = ?
+                    ORDER BY p.name ASC`,
+            [semesterId]
+        );
+        // 返回查询结果（若存在则为数组第一项，否则为 null）
+        console.log("fetched programme :", rows);
+        return rows;
+    } catch (err) {
+        console.log("service: getSemesterTimeline error", err);
+        throwError('Failed to get semester timeline', 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+export const createSemesterProgramme = async (programme) => {
+    // console.log("service: createSemesterTimeline");
+    console.log("programme data:", programme);
+    const connection = await pool.getConnection();
+    try {
+        const {
+            name,
+            programme_code,
+            coordinator_professor_id,
+            semester_id
+        } = programme;
+
+        const [result] = await connection.execute(
+            `INSERT INTO programmes (name, semester_id, coordinator_professor_id, programme_code) VALUES (?, ?, ?, ?)`,
+            [
+                name,
+                semester_id,
+                coordinator_professor_id,
+                programme_code,
+            ]
+        );
+
+        await connection.commit();
+        return result; // 标记为新创建
+    } catch (err) {
+        console.log("service: createSemesterTimeline error", err);
+        throwError('Failed to create semester timeline', 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+export const updateProgrammeCoordinator = async (programmeId, coordinatorProfessorId) => {
+  console.log("service: updateProgrammeCoordinator - programmeId:", programmeId, "professorId:", coordinatorProfessorId);
+  const connection = await pool.getConnection();
+  
+  try {
+    // 1. 验证参数有效性
+    if (!programmeId || isNaN(programmeId)) {
+      throwError('Invalid programme ID (must be a number)', 400);
+    }
+    if (!coordinatorProfessorId || isNaN(coordinatorProfessorId)) {
+      throwError('Invalid coordinator professor ID (must be a number)', 400);
+    }
+
+    // 2. 检查项目是否存在（关联当前学期，确保数据安全性）
+    const [programmeExists] = await connection.execute(
+      `SELECT id FROM programmes WHERE id = ?`, // programmes 表主键为 id（与 getSemesterProgramme 一致）
+      [programmeId]
+    );
+    if (programmeExists.length === 0) {
+      throwError(`Programme with ID ${programmeId} not found`, 404);
+    }
+
+    // 3. 检查教授是否存在（关联 professors 表，与 getSemesterProgramme 表关联逻辑一致）
+    const [professorExists] = await connection.execute(
+      `SELECT id FROM professors WHERE id = ?`,
+      [coordinatorProfessorId]
+    );
+    if (professorExists.length === 0) {
+      throwError(`Professor with ID ${coordinatorProfessorId} not found`, 404);
+    }
+
+    // 4. 执行更新操作（更新 programmes 表的 coordinator_professor_id 字段）
+    const [updateResult] = await connection.execute(
+      `UPDATE programmes 
+       SET coordinator_professor_id = ? 
+       WHERE id = ?`,
+      [coordinatorProfessorId, programmeId]
+    );
+
+    // 5. 验证更新结果（确保有数据被修改）
+    if (updateResult.affectedRows === 0) {
+      throwError('Failed to update coordinator (no changes made)', 500);
+    }
+
+    // 6. 返回更新结果（与现有接口数据格式一致）
+    return {
+      programme_id: programmeId,
+      coordinator_professor_id: coordinatorProfessorId,
+      affectedRows: updateResult.affectedRows,
+      message: 'Coordinator updated successfully'
+    };
+
+  } catch (err) {
+    console.log("service: updateProgrammeCoordinator error", err);
+    // 若为自定义错误直接抛出，否则包装为系统错误
+    if (err.statusCode) throw err;
+    throwError('Failed to update programme coordinator', 500, err);
+  } finally {
+    connection.release(); // 确保连接释放
+  }
+};
+
+export const deleteProgramme = async (semesterId, programmeId) => {
+  console.log("service: deleteProgramme - semesterId:", semesterId, "programmeId:", programmeId);
+  const connection = await pool.getConnection();
+  
+  try {
+    // 1. 验证参数有效性
+    if (!semesterId || isNaN(semesterId)) {
+      throwError('Invalid semester ID (must be a number)', 400);
+    }
+    if (!programmeId || isNaN(programmeId)) {
+      throwError('Invalid programme ID (must be a number)', 400);
+    }
+
+    // 2. 检查项目是否存在，且属于当前学期（避免删除其他学期的项目）
+    const [programmeExists] = await connection.execute(
+      `SELECT id FROM programmes WHERE id = ? AND semester_id = ?`,
+      [programmeId, semesterId]
+    );
+    if (programmeExists.length === 0) {
+      throwError(`Programme with ID ${programmeId} not found in semester ${semesterId}`, 404);
+    }
+
+    // 3. 执行删除操作（可根据实际需求添加事务，若有关联表需先删关联数据）
+    const [deleteResult] = await connection.execute(
+      `DELETE FROM programmes WHERE id = ? AND semester_id = ?`,
+      [programmeId, semesterId]
+    );
+
+    // 4. 验证删除结果
+    if (deleteResult.affectedRows === 0) {
+      throwError('Failed to delete programme (no changes made)', 500);
+    }
+
+    // 5. 返回删除结果（与现有接口格式一致）
+    return {
+      programme_id: programmeId,
+      semester_id: semesterId,
+      affectedRows: deleteResult.affectedRows,
+      message: 'Programme deleted successfully'
+    };
+
+  } catch (err) {
+    console.log("service: deleteProgramme error", err);
+    // 若为自定义错误直接抛出，否则包装为系统错误
+    if (err.statusCode) throw err;
+    throwError('Failed to delete programme', 500, err);
+  } finally {
+    connection.release(); // 确保连接释放
+  }
 };
