@@ -13,7 +13,7 @@ const menuConfig = {
       icon: "Event",
       children: [
         { title: "Manage Semester", path: "/admin/semester/ManageSemester" },
-        { title: "Venue Details", path: "/admin/semester/venues" },
+        { title: "Venue Details", path: "/admin/semester/ManageVenues" },
       ],
     },
     {

@@ -3,7 +3,7 @@ const semesterManager = require('@/services/semester.service');
 
 export const handleGetSemester = async () => {
     try {
-        console.log("controller:getFaculty")
+        console.log("controller:getSemester")
         let results = await semesterManager.getSemester();
         return new Response(
             JSON.stringify({
