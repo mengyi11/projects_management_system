@@ -47,9 +47,9 @@ const menuConfig = {
       title: "Proposal",
       icon: "Proposal",
       children: [
-        { title: "Add Proposal", path: "/projects/my" },
-        { title: "My Proposals", path: "/projects/my" },
-        { title: "All Proposals", path: "/projects/register" },
+        { title: "Add Proposal", path: "/faculty/proposal/AddProposal" },
+        { title: "My Proposals", path: "/faculty/proposal/MyProposals" },
+        { title: "All Proposals", path: "/faculty/proposal/AllProposals" },
       ],
     },
     {

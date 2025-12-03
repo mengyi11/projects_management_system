@@ -1,38 +1,38 @@
-import pool from '@/lib/db';
+// src/app/api/login/route.js
+import pool from "@/lib/db";
+import { handleError } from "@/lib/errorHandler";
 
-export async function POST(req) {
+export const POST = async (req) => {
   try {
     const { email } = await req.json();
 
-    const [rows] = await pool.query(
-      'SELECT * FROM users WHERE email = ?',
+    // 关联role表，获取role_name（适配你的role表结构）
+    const [users] = await pool.query(
+      `SELECT 
+        u.id, u.name, u.email, u.role_id,
+        r.role_name  
+       FROM users u
+       LEFT JOIN roles r ON u.role_id = r.id 
+       WHERE u.email = ?`,
       [email]
     );
 
-    if (!rows || rows.length === 0) {
-      return new Response(
-        JSON.stringify({ statusCode: 404, ok: false, message: 'Never registered' }),
-        { status: 404 }
-      );
+    if (users.length === 0) {
+      throw new Error("User not found", { cause: { statusCode: 404 } });
     }
 
-    const user = rows[0];
-    console.log(user);
+    const user = users[0];
+
     return new Response(
       JSON.stringify({
-        statusCode: 200,
         ok: true,
-        message: 'Login successful',
-        role_id: user.role_id
+        statusCode: 200,
+        message: "Login successful",
+        data: user, // 返回字段：id/name/email/role_id/role_name
       }),
-      { status: 200 }
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
-
-  } catch (err) {
-    console.error(err);
-    return new Response(
-      JSON.stringify({ statusCode: 500, ok: false, message: 'Database error' }),
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleError(error);
   }
-}
+};
