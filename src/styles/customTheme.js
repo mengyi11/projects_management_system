@@ -160,6 +160,9 @@ let customTheme = createTheme({
             main: "#57576aff",
             contrastText: "#fff",
         },
+        orange:{
+             main: "#e26a15ff",
+        },
         error: {
             main: red[500],
         },

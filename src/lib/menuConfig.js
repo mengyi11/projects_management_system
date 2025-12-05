@@ -82,8 +82,8 @@ const menuConfig = {
       title: "Registration",
       icon: "Registration",
       children: [
-        { title: "Planner", path: "/projects/my" },
-        { title: "Registration", path: "/projects/register" },
+        { title: "Planner", path: "student/registration/Planner" },
+        { title: "Registration", path: "student/registration/registration" },
       ],
     },
     {

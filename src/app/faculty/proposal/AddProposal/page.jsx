@@ -26,14 +26,15 @@ export default function AddProposal() {
   const currentPathArr = ['Faculty', 'All proposals', 'Add proposal'];
   const router = useRouter();
   
-  // 表单状态
+  // 表单状态 - 新增 capacity 字段
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     programme_id: "",
     venue_id: "",
     professor_id: "", // 从本地存储获取当前教师ID
-    semester_id: "" // 最终选中的活跃学期ID
+    semester_id: "", // 最终选中的活跃学期ID
+    capacity: "" // 新增：项目容量（人数限制）
   });
   
   // 下拉选项数据
@@ -58,18 +59,11 @@ export default function AddProposal() {
           setTimeout(() => router.push('/'), 2000); // 2秒后跳转登录页
           return;
         }
-        // if (user.role_id !== 2 || user.role_id !== 1) {
-        //   setIsUnauthorized(true);
-        //   toast.error("Unauthorized: Only faculty can access this page");
-        //   setTimeout(() => router.push('/'), 2000); // 跳转首页
-        //   return;
-        // }
 
         // 第二步：获取所有学期
         const semestersRes = await axios.get("/api/admin/semesters/all");
         const allSemesters = semestersRes.data.data.flat(); // 适配二维数组结构
         setSemesters(allSemesters);
-        console.log("1")
 
         // 第三步：筛选活跃学期（active 状态为 'active'）
         const activeSemester = allSemesters.find(sem => sem.active === 'active');
@@ -83,7 +77,6 @@ export default function AddProposal() {
         } else {
           // 第四步：用活跃学期ID请求对应项目列表
           const programmesRes = await axios.get(`/api/admin/semesters/${activeSemester.id}/programmes`);
-          console.log(programmesRes)
           setProgrammes(programmesRes.data.data);
 
           // 填充活跃学期ID和当前教师ID
@@ -95,8 +88,7 @@ export default function AddProposal() {
         }
 
         // 第五步：加载场地列表
-        const venuesRes = await axios.get(`/api/admin/venues?semester_id=${activeSemester.id}`);
-        console.log(venuesRes)
+        const venuesRes = await axios.get(`/api/admin/venues?semester_id=${activeSemester?.id || ""}`);
         setVenues(venuesRes.data.data);
 
       } catch (err) {
@@ -127,18 +119,22 @@ export default function AddProposal() {
     }
   }, [formData.semester_id, semesters.length]);
 
-  // 表单输入处理（不变）
+  // 表单输入处理（新增 capacity 字段支持）
   const handleInputChange = (e) => {
-  
     const { name, value } = e.target;
-     console.log( name, value )
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // 容量字段仅允许数字输入
+    if (name === "capacity" && value !== "") {
+      const numericValue = value.replace(/\D/g, ""); // 过滤非数字字符
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
 
-  // 表单验证（增强 professor_id 校验）
+  // 表单验证（新增 capacity 校验）
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim() || formData.title.length < 2) {
@@ -159,11 +155,19 @@ export default function AddProposal() {
       toast.error("Invalid user information, please re-login");
       setTimeout(() => router.push('/'), 2000);
     }
+    // 新增：容量校验（必填 + 大于0 + 整数）
+    if (!formData.capacity) {
+      newErrors.capacity = "Capacity is required";
+    } else if (parseInt(formData.capacity) <= 0) {
+      newErrors.capacity = "Capacity must be greater than 0";
+    } else if (!Number.isInteger(parseInt(formData.capacity))) {
+      newErrors.capacity = "Capacity must be an integer";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // 提交表单（不变）
+  // 提交表单（新增 capacity 字段提交）
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -171,7 +175,8 @@ export default function AddProposal() {
     try {
       const submitData = {
         ...formData,
-        status: "pending" // 提案默认状态为待审核
+        status: "pending", // 提案默认状态为待审核
+        capacity: parseInt(formData.capacity) // 确保是数字类型提交
       };
       const res = await axios.post("/api/faculty/proposals", submitData);
       if (res.data.ok) {
@@ -183,7 +188,8 @@ export default function AddProposal() {
           programme_id: "",
           venue_id: "",
           professor_id: formData.professor_id,
-          semester_id: formData.semester_id
+          semester_id: formData.semester_id,
+          capacity: "" // 重置容量字段
         });
       }
     } catch (err) {
@@ -320,6 +326,26 @@ export default function AddProposal() {
             </Select>
           </FormControl>
 
+          {/* 新增：容量字段 */}
+          <TextField
+            fullWidth
+            label="Capacity"
+            name="capacity"
+            value={formData.capacity}
+            onChange={handleInputChange}
+            variant="outlined"
+            margin="normal"
+            type="number" // 数字输入框
+            inputProps={{ 
+              min: 1, // 最小值1
+              step: 1, // 步长1
+              inputMode: "numeric", // 移动端显示数字键盘
+              pattern: "[0-9]*" // 限制仅数字
+            }}
+            error={!!errors.capacity}
+            helperText={errors.capacity || "Maximum number of students for this project"}
+          />
+
           {/* 描述 */}
           <TextField
             fullWidth
@@ -341,7 +367,7 @@ export default function AddProposal() {
             variant="contained"
             color="primary"
             sx={{ mt: 2 }}
-            disabled={isLoading || programmes.length === 0 || !formData.semester_id || !formData.professor_id}
+            disabled={isLoading || programmes.length === 0 || !formData.semester_id || !formData.professor_id || !formData.capacity}
           >
             Submit
           </Button>

@@ -61,6 +61,8 @@ export const getFaculty = async () => {
 
 
 
+
+
 export const createProposal = async (proposalData) => {
     console.log("---------proposalData---------")
     console.log(proposalData)
@@ -69,7 +71,7 @@ export const createProposal = async (proposalData) => {
         // await connection.beginTransaction();
 
         // 解构并校验必填字段
-        const { title, description, professor_id, semester_id, programme_id, venue_id } = proposalData;
+        const { title, description, professor_id, semester_id, programme_id, venue_id,capacity } = proposalData;
         if (!title || title.trim().length < 2) {
             throwError("Title must be at least 2 characters", 400);
         }
@@ -86,11 +88,12 @@ export const createProposal = async (proposalData) => {
             throwError("Invalid programme ID (must be a positive integer)", 400);
         }
 
+        console.log(capacity)
         // 插入提案数据（status 默认为 pending）
         const [insertResult] = await connection.execute(
             `INSERT INTO proposals (
-        title, description, professor_id, semester_id, venue_id, programme_id, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        title, description, professor_id, semester_id, venue_id, programme_id, capacity, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 title.trim(),
                 description.trim(),
@@ -98,6 +101,7 @@ export const createProposal = async (proposalData) => {
                 Number(semester_id),
                 venue_id ? Number(venue_id) : null, // venue_id 可选，允许为 null
                 Number(programme_id),
+                Number(capacity),
                 "pending" // 默认为待审核状态
             ]
         );
@@ -136,11 +140,7 @@ export const createProposal = async (proposalData) => {
     }
 };
 
-/**
- * 获取所有提案（支持按状态筛选）
- * @param {Object} filters - 筛选条件（可选）
- * @returns {Array} 提案列表
- */
+
 export const getProposals = async (filters = {}) => {
     const connection = await pool.getConnection();
     try {
@@ -189,11 +189,7 @@ export const getProposals = async (filters = {}) => {
     }
 };
 
-/**
- * 根据 ID 获取单个提案详情
- * @param {number} proposalId - 提案 ID
- * @returns {Object} 提案详情
- */
+
 export const getProposalById = async (proposalId) => {
     const connection = await pool.getConnection();
     try {
@@ -347,11 +343,7 @@ export const updateProposal = async (proposalId, updateData) => {
     }
 };
 
-/**
- * 删除提案
- * @param {number} proposalId - 提案 ID
- * @returns {Object} 删除结果
- */
+
 export const deleteProposal = async (proposalId) => {
     const connection = await pool.getConnection();
     try {
@@ -394,6 +386,153 @@ export const deleteProposal = async (proposalId) => {
             throwError("Cannot delete proposal: It is associated with other records", 400, err);
         }
         throwError("Failed to delete proposal", 500, err);
+    } finally {
+        connection.release();
+    }
+};
+
+
+export const verifyFacultyUser = async (userId) => {
+    const connection = await pool.getConnection();
+    try {
+        // 验证用户存在、活跃且角色为教师（role_id=2，对应 roles 表的教师角色）
+        const [users] = await connection.query(
+            `SELECT u.id, u.name, u.email, r.role_name AS role 
+             FROM users u
+             INNER JOIN roles r ON u.role_id = r.id
+             WHERE u.id = ? AND u.status = 'active' AND u.role_id = 2`,
+            [userId]
+        );
+
+        if (users.length === 0) {
+            throwError("Unauthorized: Invalid or inactive faculty user", 401);
+        }
+
+        return users[0];
+    } catch (err) {
+        console.error("service: verifyFacultyUser error:", err);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+export const getProfessorIdByUserId = async (userId) => {
+    const connection = await pool.getConnection();
+    try {
+        const [professors] = await connection.query(
+            "SELECT id FROM professors WHERE user_id = ?",
+            [userId]
+        );
+
+        if (professors.length === 0) {
+            throwError("Forbidden: Not a registered professor", 403);
+        }
+
+        return professors[0].id;
+    } catch (err) {
+        console.error("service: getProfessorIdByUserId error:", err);
+        throw err;
+    } finally {
+        connection.release();
+    }
+};
+
+export const getMyProposalsList = async (userId) => {
+    const connection = await pool.getConnection();
+    console.log(userId)
+    try {
+       const [proposals] = await connection.query(
+            `SELECT 
+                p.id, p.title, p.description, p.status, p.reason,
+                p.created_at, p.updated_at,
+                s.name AS semester_name,
+                pr.name AS programme_name,
+                v.name AS venue_name, v.location AS venue_location
+             FROM proposals p
+             INNER JOIN professors prof ON p.professor_id = prof.user_id
+             LEFT JOIN semesters s ON p.semester_id = s.id
+             LEFT JOIN programmes pr ON p.programme_id = pr.id
+             LEFT JOIN venues v ON p.venue_id = v.id
+             WHERE p.professor_id = ?
+             ORDER BY p.updated_at DESC`,
+            [userId] // 直接传入 users 表的 userId
+        );
+
+
+        return proposals;
+    } catch (err) {
+        console.error("service: getMyProposalsList error:", err);
+        throwError("Failed to query my proposals", 500);
+    } finally {
+        connection.release();
+    }
+};
+
+export const formatProposalsList = (proposals, user) => {
+    return proposals.map((item) => ({
+        id: item.id,
+        title: item.title || "Untitled",
+        semester_name: item.semester_name || "N/A",
+        programme_name: item.programme_name || "N/A",
+        venue: item.venue_name
+            ? `${item.venue_name} (${item.venue_location || "No Location"})`
+            : "N/A",
+        status: item.status || "pending",
+        professor_name: user.name,
+        professor_email: user.email,
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+        description: item.description || "No description provided"
+    }));
+};
+
+export const getProposalDetails = async (proposalId, professorId) => {
+    const connection = await pool.getConnection();
+    try {
+        const [proposals] = await connection.query(
+            `SELECT 
+                p.id, p.title, p.description, p.status, p.reason,
+                p.created_at, p.updated_at,
+                s.name AS semester_name,
+                pr.name AS programme_name,
+                v.name AS venue_name, v.location AS venue_location,
+                u.name AS professor_name, u.email AS professor_email
+             FROM proposals p
+             LEFT JOIN users u ON p.professor_id = u.id
+             LEFT JOIN semesters s ON p.semester_id = s.id
+             LEFT JOIN programmes pr ON p.programme_id = pr.id
+             LEFT JOIN venues v ON p.venue_id = v.id
+             WHERE p.id = ? AND p.professor_id = ?`,
+            [proposalId, professorId]
+        );
+
+        if (proposals.length === 0) {
+            throwError("Not Found: Proposal does not exist or not belong to you", 404);
+        }
+
+        const proposal = proposals[0];
+
+        // 格式化详情数据
+        return {
+            id: proposal.id,
+            title: proposal.title || "Untitled",
+            description: proposal.description || "No description provided",
+            status: proposal.status || "pending",
+            reason: proposal.reason || "No rejection reason provided",
+            semester_name: proposal.semester_name || "N/A",
+            programme_name: proposal.programme_name || "N/A",
+            venue: proposal.venue_name
+                ? `${proposal.venue_name} (${proposal.venue_location || "No Location"})`
+                : "N/A",
+            professor_name: proposal.professor_name || "Unknown",
+            professor_email: proposal.professor_email || "Unknown",
+            created_at: proposal.created_at,
+            updated_at: proposal.updated_at
+        };
+    } catch (err) {
+        console.error("service: getProposalDetails error:", err);
+        throw err;
     } finally {
         connection.release();
     }
