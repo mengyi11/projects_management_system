@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Box, Card, CardContent, Typography, CardActions, Button, Grid } from "@mui/material";
-import AdminLayout from "@/components/AdminLayout";
 import iconMap from '@/styles/iconMap';
+import StudentLayout from '@/components/StudentLayout';
 
 export default function StudentDashboard() {
     const pathArr = ["Student", "Dashboard"];
@@ -15,7 +15,7 @@ export default function StudentDashboard() {
     const GradeIcon = iconMap["Grade"];
     const Enter = iconMap["Enter"];
     return (
-        <AdminLayout pathArr={pathArr} userRole={userRole}>
+        <StudentLayout pathArr={pathArr} userRole={userRole}>
             <Typography variant='h4' sx={{ mb: 3 }}>Dashboard</Typography>
             <Typography variant='h5' sx={{ mb: 3 }}>Welcome Back!</Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -142,6 +142,6 @@ export default function StudentDashboard() {
                     </Card>
                 </Grid>
             </Grid>
-        </AdminLayout>
+        </StudentLayout>
     );
 } 
