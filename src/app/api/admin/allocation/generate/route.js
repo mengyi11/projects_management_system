@@ -11,7 +11,6 @@ export const POST = async (req) => {
     }
 
     const result = await generateAllocation(semester_id);
-    console.log("---------------------------------------")
     console.log(result)
     return NextResponse.json({ ok: true, data: result });
   } catch (error) {

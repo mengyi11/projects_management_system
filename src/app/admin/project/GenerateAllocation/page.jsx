@@ -97,6 +97,7 @@ export default function GenerateAllocation() {
 
       try {
         const statsRes = await axios.get(`/api/admin/allocation/stats?semester_id=${sem.id}`);
+        console.log("statsRes:", statsRes.data.data);
         setAllocationStats(statsRes.data.data);
         setIsActive(statsRes.data.data.is_active);
 
