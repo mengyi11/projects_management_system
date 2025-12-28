@@ -26,7 +26,7 @@ export default function ManageStudents() {
   });
   const [formErrors, setFormErrors] = useState({});
   const [semesters, setSemesters] = useState([]); // 存储学期列表
-  const EditIcon = iconMap["Edit"];
+  const RemoveIcon = iconMap["Remove"];
   const router = useRouter();
   const pathname = usePathname();
 
@@ -167,8 +167,8 @@ export default function ManageStudents() {
       sortable: false,
       renderCell: (cellValues) => (
         <>
-          <IconButton aria-label="edit" >
-            <EditIcon color="error" />
+          <IconButton aria-label="delete" >
+            <RemoveIcon color="error" />
           </IconButton>
         </>
       ),
