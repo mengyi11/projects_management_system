@@ -360,7 +360,7 @@ export default function RegistrationPlanner() {
         },
         {
             field: 'actions',
-            headerName: 'Actions',
+            headerName: 'View',
             flex: 0.4,
             minWidth: 80,
             sortable: false,
@@ -432,7 +432,7 @@ export default function RegistrationPlanner() {
                     <>
                         {/* 保留：已选项目列表展示 + 快速取消 */}
                         {selectedPlanIds.size > 0 && (
-                            <Box sx={{ mt: 0, mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#fafafa' }}>
+                            <Box sx={{ mt: 0, mb: 3, p: 2, border: '1px solid #e0e0e0', borderRadius: 1, backgroundColor: '#ffffffff' }}>
                                 <Typography variant="subtitle1" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                                     Selected Projects ({selectedPlanIds.size}/5):
                                 </Typography>
@@ -445,7 +445,7 @@ export default function RegistrationPlanner() {
                                                     label={project.title}
                                                     onDelete={() => handleCheckboxChange(id)}
                                                     variant="outlined"
-                                                    color="primary"
+                                                    color="orange"
                                                     sx={{
                                                         py: 1,
                                                         width: '100%',
